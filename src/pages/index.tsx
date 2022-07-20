@@ -1,13 +1,21 @@
-import { Container, Text } from "@chakra-ui/react";
+import { SimpleGrid, Container } from "@chakra-ui/react";
+
+import { Card } from "../components/Card";
+import { Header } from "../components/Header";
 
 export default function Home() {
   return (
-    <Container
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      h="500px">
-      <Text color="green.400">Test</Text>
-    </Container>  
-  );
+    <>
+      <Header />
+
+      <Container minW="1120px" mt="-120px">
+        <SimpleGrid columns={3} spacing="32px">
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+        </SimpleGrid>
+      </Container>
+    </>
+  )
 }
