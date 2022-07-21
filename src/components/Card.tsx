@@ -1,4 +1,5 @@
 import { Box, Button, Center, Heading, Image, Switch, Text } from "@chakra-ui/react";
+import { useState } from "react";
 import { FiEdit3 } from "react-icons/fi";
 import { RiDeleteBin7Line } from "react-icons/ri";
 
@@ -10,9 +11,21 @@ interface Props {
 }
 
 export function Card({ img_url, title, description, price }: Props) {
+  const [isAvailable, setIsAvailable] = useState(true);
+
+  function handleChangeAvailable() {
+    setIsAvailable(!isAvailable)
+  }
+
   return (
     <Box w="352px">
-      <Center bgColor="yellow.400" marginBottom="-90px">
+      <Center
+        pos="relative"
+        marginBottom="-90px"
+        filter="auto"
+        bgColor="yellow.400"
+        borderRadius="8px 8px 0 0"
+      >
         <Image
           width="272px"
           height="198px"
@@ -21,6 +34,18 @@ export function Card({ img_url, title, description, price }: Props) {
           src={img_url}
           alt={title}
         />
+
+        {!isAvailable && (
+          <Box
+            w="100%"
+            height="170px"
+            mt="-50px"
+            pos="absolute"
+            zIndex="10"
+            bgColor="#C4C4C4"
+            filter="auto"
+            opacity="50%"></Box>
+        )}
       </Center>
 
       <Box
@@ -41,12 +66,12 @@ export function Card({ img_url, title, description, price }: Props) {
 
         <Box display="flex" alignItems="center">
           <Text
-            color="green.400"
+            color={isAvailable ? "green.400" : "gray.500"}
             fontSize="24px"
             fontFamily="Roboto"
             fontWeight={400}>R$</Text>
           <Text
-            color="green.400"
+            color={isAvailable ? "green.400" : "gray.500"}
             ml="2"
             fontSize="24px"
             fontFamily="Roboto"
@@ -61,6 +86,7 @@ export function Card({ img_url, title, description, price }: Props) {
         justifyContent="space-between"
         paddingX="8"
         paddingY="5"
+        borderRadius="0 0 8px 8px"
       >
         <Box display="flex">
           <Button w="24px" mr="3">
@@ -77,10 +103,14 @@ export function Card({ img_url, title, description, price }: Props) {
         </Box>
 
         <Box display="flex">
-          <Text mr="2">Disponível</Text>
-          <Switch colorScheme="green" size="lg" />
+          <Text mr="2">{isAvailable ? "Disponível" : "Indisponível"}</Text>
+          <Switch
+            colorScheme="green"
+            size="lg"
+            isChecked={isAvailable}
+            onChange={handleChangeAvailable} />
         </Box>
       </Box>
-    </Box >
+    </Box>
   );
 }
