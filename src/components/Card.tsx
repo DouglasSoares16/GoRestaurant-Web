@@ -1,4 +1,4 @@
-import { Box, Center, Container, Heading, Image, Switch, Text } from "@chakra-ui/react";
+import { Box, Button, Center, Container, Heading, Image, Switch, Text } from "@chakra-ui/react";
 import { FiEdit3 } from "react-icons/fi";
 import { RiDeleteBin7Line } from "react-icons/ri";
 
@@ -53,12 +53,17 @@ export function Card() {
         paddingY="5"
       >
         <Box display="flex">
-          <Box bgColor="white" padding="2.5" mr="2" borderRadius="8px">
-            <FiEdit3 size="24px" />
-          </Box>
-          <Box bgColor="white" padding="2.5" borderRadius="8px">
-            <RiDeleteBin7Line size="24px" />
-          </Box>
+          <Button w="24px" mr="3">
+            <Box bgColor="white" padding="2.5" borderRadius="8px">
+              <FiEdit3 size="24px" />
+            </Box>
+          </Button>
+
+          <Button w="24px">
+            <Box bgColor="white" padding="2.5" borderRadius="8px">
+              <RiDeleteBin7Line size="24px" />
+            </Box>
+          </Button>
         </Box>
 
         <Box display="flex">
