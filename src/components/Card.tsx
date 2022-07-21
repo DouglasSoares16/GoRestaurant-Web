@@ -1,8 +1,15 @@
-import { Box, Button, Center, Container, Heading, Image, Switch, Text } from "@chakra-ui/react";
+import { Box, Button, Center, Heading, Image, Switch, Text } from "@chakra-ui/react";
 import { FiEdit3 } from "react-icons/fi";
 import { RiDeleteBin7Line } from "react-icons/ri";
 
-export function Card() {
+interface Props {
+  img_url: string;
+  title: string;
+  description: string;
+  price: string;
+}
+
+export function Card({ img_url, title, description, price }: Props) {
   return (
     <Box w="352px">
       <Center bgColor="yellow.400" marginBottom="-90px">
@@ -11,8 +18,8 @@ export function Card() {
           height="198px"
           marginTop="5"
           objectFit="contain"
-          src="https://www.receiteria.com.br/wp-content/uploads/receitas-de-macarrao-vegano-0.jpg"
-          alt="Prato ao molho"
+          src={img_url}
+          alt={title}
         />
       </Center>
 
@@ -23,11 +30,14 @@ export function Card() {
         marginTop="10"
         bgColor="gray.100"
       >
-        <Heading color="gray.600" fontFamily="Poppins" fontSize="28px" mb="4">Ao Molho</Heading>
+        <Heading
+          color="gray.600"
+          fontFamily="Poppins"
+          fontSize="28px"
+          mb="4"
+        >{title}</Heading>
 
-        <Text color="gray.600" mb="4">
-          Macarrão ao molho branco, fughi e cheiro verde das montanhas.
-        </Text>
+        <Text color="gray.600" mb="4">{description}</Text>
 
         <Box display="flex" alignItems="center">
           <Text
@@ -40,7 +50,7 @@ export function Card() {
             ml="2"
             fontSize="24px"
             fontFamily="Roboto"
-            fontWeight={700}>19,90</Text>
+            fontWeight={700}>{price}</Text>
         </Box>
       </Box>
       <Box
