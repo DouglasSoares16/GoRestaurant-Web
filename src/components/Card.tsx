@@ -17,6 +17,8 @@ export function Card({ img_url, title, description, price }: Props) {
     setIsAvailable(!isAvailable)
   }
 
+  const priceFormatted = price.replace(".", ",")
+
   return (
     <Box w="352px">
       <Center
@@ -75,7 +77,7 @@ export function Card({ img_url, title, description, price }: Props) {
             ml="2"
             fontSize="24px"
             fontFamily="Roboto"
-            fontWeight={700}>{price}</Text>
+            fontWeight={700}>{priceFormatted}</Text>
         </Box>
       </Box>
       <Box

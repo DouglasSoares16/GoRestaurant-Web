@@ -13,15 +13,18 @@ import {
   Box,
   HStack,
   Text,
+  InputGroup,
+  InputLeftAddon,
 } from '@chakra-ui/react';
 import { AiOutlineLike } from "react-icons/ai";
 import { BsCheck2Square } from "react-icons/bs";
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { Card } from "../components/Card";
-import { Input } from '../components/input';
+import { Input } from '../components/Input';
 import { Button } from '../components/Button';
 import { Header } from "../components/Header";
+import { InputPrice } from '../components/InputPrice';
 
 interface CreateDishFormData {
   imgUrl: string;
@@ -159,11 +162,11 @@ export default function Home() {
                       w="440px"
                       {...register("title")}
                     />
-                    <Input
+                    <InputPrice
                       label="Preço"
-                      defaultValue="R$ "
-                      w="200px"
-                      {...register("price")} />
+                      type="number"
+                      {...register("price")}
+                    />
                   </HStack>
 
                   <Input label="Descrição do prato" {...register("description")} />
