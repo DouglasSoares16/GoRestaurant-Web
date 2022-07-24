@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -11,47 +12,79 @@ import {
   useDisclosure,
   Box,
   HStack,
-} from '@chakra-ui/react'
+  Text,
+} from '@chakra-ui/react';
+import { AiOutlineLike } from "react-icons/ai";
 import { BsCheck2Square } from "react-icons/bs";
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { Card } from "../components/Card";
 import { Input } from '../components/input';
 import { Button } from '../components/Button';
 import { Header } from "../components/Header";
 
-export default function Home() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+interface CreateDishFormData {
+  imgUrl: string;
+  title: string;
+  description: string;
+  price: string;
+}
 
-  const items = [
-    {
-      id: "21300123",
-      img_url: "https://www.receiteria.com.br/wp-content/uploads/receitas-de-macarrao-vegano-0.jpg",
-      title: "Prato ao molho",
-      description: "Macarrão ao molho branco, fughi e cheiro verde das montanhas.",
-      price: "19,90"
-    },
-    {
-      id: "21312489063",
-      img_url: "https://www.receitasagora.com.br/wp-content/uploads/2020/06/receita-spaguete-com-camarao.jpg",
-      title: "A La Camarón",
-      description: "Macarrão com vegetais de primeira linha e camarão dos 7 mares.",
-      price: "25,80"
-    },
-    {
-      id: "2137456123",
-      img_url: "https://www.receiteria.com.br/wp-content/uploads/receitas-de-macarrao-vegano-0.jpg",
-      title: "Prato ao molho",
-      description: "Macarrão ao molho branco, fughi e cheiro verde das montanhas.",
-      price: "19,90"
-    },
-    {
-      id: "213746352123",
-      img_url: "https://www.receitasagora.com.br/wp-content/uploads/2020/06/receita-spaguete-com-camarao.jpg",
-      title: "A La Camarón",
-      description: "Macarrão com vegetais de primeira linha e camarão dos 7 mares.",
-      price: "25,80"
-    },
-  ];
+const items = [
+  {
+    id: "21300123",
+    img_url: "https://www.receiteria.com.br/wp-content/uploads/receitas-de-macarrao-vegano-0.jpg",
+    title: "Prato ao molho",
+    description: "Macarrão ao molho branco, fughi e cheiro verde das montanhas.",
+    price: "19,90"
+  },
+  {
+    id: "21312489063",
+    img_url: "https://www.receitasagora.com.br/wp-content/uploads/2020/06/receita-spaguete-com-camarao.jpg",
+    title: "A La Camarón",
+    description: "Macarrão com vegetais de primeira linha e camarão dos 7 mares.",
+    price: "25,80"
+  },
+  {
+    id: "2137456123",
+    img_url: "https://www.receiteria.com.br/wp-content/uploads/receitas-de-macarrao-vegano-0.jpg",
+    title: "Prato ao molho",
+    description: "Macarrão ao molho branco, fughi e cheiro verde das montanhas.",
+    price: "19,90"
+  },
+  {
+    id: "213746352123",
+    img_url: "https://www.receitasagora.com.br/wp-content/uploads/2020/06/receita-spaguete-com-camarao.jpg",
+    title: "A La Camarón",
+    description: "Macarrão com vegetais de primeira linha e camarão dos 7 mares.",
+    price: "25,80"
+  },
+]
+
+export default function Home() {
+  const [createdDish, setCreatedDish] = useState(false);
+  const [dishes, setDishes] = useState(items);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { register, handleSubmit, reset } = useForm();
+
+  const handleCreateDish: SubmitHandler<CreateDishFormData> = async (values) => {
+    setDishes(oldState => [
+      ...oldState,
+      {
+        id: String(items.length + Math.random()),
+        ...values,
+        img_url: values.imgUrl
+      }]);
+
+    setCreatedDish(true);
+
+    setTimeout(() => {
+      reset();
+      setCreatedDish(false);
+      onClose();
+    }, 1500);
+  }
 
   return (
     <>
@@ -60,7 +93,7 @@ export default function Home() {
       <Container minW="1120px" mt="-120px">
         <SimpleGrid columns={3} spacing="32px">
           {
-            items.map(item => (
+            dishes.map(item => (
               <Card
                 key={item.id}
                 img_url={item.img_url}
@@ -75,34 +108,77 @@ export default function Home() {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay bg="rgba(0, 0, 0, 0.9)" />
-        <ModalContent maxH="900px" maxW="736px" p="4" bg="gray.100">
-          <ModalHeader
-            fontWeight="600"
-            fontFamily="Poppins"
-            fontSize="36px"
-            color="black">Novo
-            Prato</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody mb="5">
-            <Box>
-              <Input label="URL da imagem" placeholder="Cole o link aqui" />
+        {
+          createdDish ? (
+            <ModalContent
+              h="100px"
+              w="300px"
+              margin="auto"
+              bg="transparent"
+              boxShadow="none"
+              display="flex"
+              alignItems="center"
+              justifyContent="center">
+              <Box display="flex" flexDirection="column" alignItems="center">
+                <AiOutlineLike
+                  size="40px"
+                  color="#39B100"
+                  style={{
+                    marginBottom: 10
+                  }}
+                />
 
-              <HStack spacing="4" marginY="6">
-                <Input label="Nome do prato" placeholder="Ex: Moda Italiana" w="440px" />
-                <Input label="Preço" defaultValue="R$ " w="200px" />
-              </HStack>
+                <Text
+                  fontSize="24px"
+                  fontWeight="700"
+                  color="white">Prato
+                  adicionado!</Text>
+              </Box>
+            </ModalContent>
+          ) : (
+            <ModalContent maxH="900px" maxW="736px" p="4" bg="gray.100">
+              <ModalHeader
+                fontWeight="600"
+                fontFamily="Poppins"
+                fontSize="36px"
+                color="black">Novo
+                Prato</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody mb="5">
+                <Box>
+                  <Input
+                    label="URL da imagem"
+                    placeholder="Cole o link aqui"
+                    {...register("imgUrl")}
+                  />
 
-              <Input label="Descrição do prato" />
-            </Box>
-          </ModalBody>
+                  <HStack spacing="4" marginY="6">
+                    <Input
+                      label="Nome do prato"
+                      placeholder="Ex: Moda Italiana"
+                      w="440px"
+                      {...register("title")}
+                    />
+                    <Input
+                      label="Preço"
+                      defaultValue="R$ "
+                      w="200px"
+                      {...register("price")} />
+                  </HStack>
 
-          <ModalFooter>
-            <Button
-              handleAction={() => { }}
-              icon={BsCheck2Square}
-              title="Adicionar Prato" />
-          </ModalFooter>
-        </ModalContent>
+                  <Input label="Descrição do prato" {...register("description")} />
+                </Box>
+              </ModalBody>
+
+              <ModalFooter>
+                <Button
+                  handleAction={handleSubmit(handleCreateDish)}
+                  icon={BsCheck2Square}
+                  title="Adicionar Prato" />
+              </ModalFooter>
+            </ModalContent>
+          )
+        }
       </Modal>
     </>
   )
