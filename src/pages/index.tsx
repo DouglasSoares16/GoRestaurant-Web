@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -13,8 +13,7 @@ import {
   Box,
   HStack,
   Text,
-  InputGroup,
-  InputLeftAddon,
+  useToast,
 } from '@chakra-ui/react';
 import { AiOutlineLike } from "react-icons/ai";
 import { BsCheck2Square } from "react-icons/bs";
@@ -25,60 +24,45 @@ import { Input } from '../components/Input';
 import { Button } from '../components/Button';
 import { Header } from "../components/Header";
 import { InputPrice } from '../components/InputPrice';
+import { api } from '../services/api';
 
 interface CreateDishFormData {
-  imgUrl: string;
+  img_url: string;
   title: string;
   description: string;
   price: string;
 }
 
-const items = [
-  {
-    id: "21300123",
-    img_url: "https://www.receiteria.com.br/wp-content/uploads/receitas-de-macarrao-vegano-0.jpg",
-    title: "Prato ao molho",
-    description: "Macarrão ao molho branco, fughi e cheiro verde das montanhas.",
-    price: "19,90"
-  },
-  {
-    id: "21312489063",
-    img_url: "https://www.receitasagora.com.br/wp-content/uploads/2020/06/receita-spaguete-com-camarao.jpg",
-    title: "A La Camarón",
-    description: "Macarrão com vegetais de primeira linha e camarão dos 7 mares.",
-    price: "25,80"
-  },
-  {
-    id: "2137456123",
-    img_url: "https://www.receiteria.com.br/wp-content/uploads/receitas-de-macarrao-vegano-0.jpg",
-    title: "Prato ao molho",
-    description: "Macarrão ao molho branco, fughi e cheiro verde das montanhas.",
-    price: "19,90"
-  },
-  {
-    id: "213746352123",
-    img_url: "https://www.receitasagora.com.br/wp-content/uploads/2020/06/receita-spaguete-com-camarao.jpg",
-    title: "A La Camarón",
-    description: "Macarrão com vegetais de primeira linha e camarão dos 7 mares.",
-    price: "25,80"
-  },
-]
+interface DishProps extends CreateDishFormData {
+  id: string;
+}
 
 export default function Home() {
   const [createdDish, setCreatedDish] = useState(false);
-  const [dishes, setDishes] = useState(items);
+  const [dishes, setDishes] = useState<DishProps[]>([]);
 
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { register, handleSubmit, reset } = useForm();
 
   const handleCreateDish: SubmitHandler<CreateDishFormData> = async (values) => {
-    setDishes(oldState => [
-      ...oldState,
-      {
-        id: String(items.length + Math.random()),
-        ...values,
-        img_url: values.imgUrl
-      }]);
+    try {
+      await api.post("/dishes", values);
+      setDishes(oldState => [
+        ...oldState,
+        {
+          ...values,
+          id: String(oldState.length + Math.random())
+        }
+      ]);
+    } catch(error) {
+      onClose();
+      toast({
+        title: "Error: Não foi possível cadastrar",
+        status: "error",
+        isClosable: true,
+      });
+    }
 
     setCreatedDish(true);
 
@@ -89,6 +73,16 @@ export default function Home() {
     }, 1500);
   }
 
+  useEffect(() => {
+    async function loadData() {
+      const { data } = await api.get("/dishes");
+
+      setDishes(data);
+    }
+
+    loadData();
+  }, []);
+
   return (
     <>
       <Header onAddNewDish={onOpen} />
@@ -96,13 +90,13 @@ export default function Home() {
       <Container minW="1120px" mt="-120px">
         <SimpleGrid columns={3} spacing="32px">
           {
-            dishes.map(item => (
+            dishes.map(dish => (
               <Card
-                key={item.id}
-                img_url={item.img_url}
-                title={item.title}
-                description={item.description}
-                price={item.price}
+                key={dish.id}
+                img_url={dish.img_url}
+                title={dish.title}
+                description={dish.description}
+                price={dish.price}
               />
             ))
           }
@@ -134,8 +128,7 @@ export default function Home() {
                 <Text
                   fontSize="24px"
                   fontWeight="700"
-                  color="white">Prato
-                  adicionado!</Text>
+                  color="white">Prato adicionado!</Text>
               </Box>
             </ModalContent>
           ) : (
@@ -144,15 +137,16 @@ export default function Home() {
                 fontWeight="600"
                 fontFamily="Poppins"
                 fontSize="36px"
-                color="black">Novo
-                Prato</ModalHeader>
+                color="black">Novo Prato</ModalHeader>
+
               <ModalCloseButton />
+
               <ModalBody mb="5">
                 <Box>
                   <Input
                     label="URL da imagem"
                     placeholder="Cole o link aqui"
-                    {...register("imgUrl")}
+                    {...register("img_url")}
                   />
 
                   <HStack spacing="4" marginY="6">
