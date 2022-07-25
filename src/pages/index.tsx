@@ -14,6 +14,8 @@ import {
   HStack,
   Text,
   useToast,
+  Spinner,
+  Center,
 } from '@chakra-ui/react';
 import { AiOutlineLike } from "react-icons/ai";
 import { BsCheck2Square } from "react-icons/bs";
@@ -40,6 +42,7 @@ interface DishProps extends CreateDishFormData {
 export default function Home() {
   const [createdDish, setCreatedDish] = useState(false);
   const [dishes, setDishes] = useState<DishProps[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -56,7 +59,7 @@ export default function Home() {
           id: data.id
         }
       ]);
-    } catch(error) {
+    } catch (error) {
       onClose();
       toast({
         title: "Error: Não foi possível cadastrar",
@@ -101,6 +104,7 @@ export default function Home() {
       const { data } = await api.get("/dishes");
 
       setDishes(data);
+      setIsLoading(false);
     }
 
     loadData();
@@ -111,21 +115,31 @@ export default function Home() {
       <Header onAddNewDish={onOpen} />
 
       <Container minW="1120px" mt="-120px">
-        <SimpleGrid columns={3} spacing="32px">
-          {
-            dishes.map(dish => (
-              <Card
-                key={dish.id}
-                id={dish.id}
-                img_url={dish.img_url}
-                title={dish.title}
-                description={dish.description}
-                price={dish.price}
-                onDelete={handleDeleteDish}
-              />
-            ))
-          }
-        </SimpleGrid>
+        {
+          isLoading ? (
+            <Center mt="200px">
+              <Spinner size="xl" color="red.500" />
+            </Center>
+          ) 
+          : 
+          (
+            <SimpleGrid columns={3} spacing="32px">
+              {
+                dishes.map(dish => (
+                  <Card
+                    key={dish.id}
+                    id={dish.id}
+                    img_url={dish.img_url}
+                    title={dish.title}
+                    description={dish.description}
+                    price={dish.price}
+                    onDelete={handleDeleteDish}
+                  />
+                ))
+              }
+            </SimpleGrid>
+          )
+        }
       </Container>
 
       <Modal isOpen={isOpen} onClose={onClose}>
