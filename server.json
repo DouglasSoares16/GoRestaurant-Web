@@ -1,0 +1,25 @@
+{
+  "dishes": [
+    {
+      "id": "845634",
+      "img_url": "https://www.receiteria.com.br/wp-content/uploads/receitas-de-macarrao-vegano-0.jpg",
+      "title": "Prato ao molho",
+      "description": "Macarrão ao molho branco, fughi e cheiro verde das montanhas.",
+      "price": "19,90"
+    },
+    {
+      "id": "213126",
+      "img_url": "https://conteudo.imguol.com.br/2013/09/17/espaguete-com-camarao-organomix-1379440571274_1920x1271.jpg",
+      "title": "A La Camarón",
+      "description": "Macarrão com vegetais de primeira linha e camarão dos 7 mares.",
+      "price": "25,80"
+    },
+    {
+      "id": "745633",
+      "img_url": "https://mh-1-agencia-estoque.panthermedia.net/media/media_detail/0015000000/15953000/~por%C3%A7%C3%A3o-do-tradicional-espaguete-italiano-bolonhesa_15953143_detail.jpg",
+      "title": "Espaguete Italiano",
+      "description": "Macarrão com manjericão fresco e picado, azeite, queijo parmesão e tomate.",
+      "price": "32,70"
+    }
+  ]
+}
