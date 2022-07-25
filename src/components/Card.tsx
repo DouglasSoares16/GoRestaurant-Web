@@ -32,7 +32,7 @@ export function Card({ img_url, title, description, price }: Props) {
           width="272px"
           height="198px"
           marginTop="5"
-          objectFit="contain"
+          objectFit="cover"
           src={img_url}
           alt={title}
         />
