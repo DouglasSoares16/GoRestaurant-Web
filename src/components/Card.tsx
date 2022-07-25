@@ -4,13 +4,15 @@ import { FiEdit3 } from "react-icons/fi";
 import { RiDeleteBin7Line } from "react-icons/ri";
 
 interface Props {
+  id: string;
   img_url: string;
   title: string;
   description: string;
   price: string;
+  onDelete(id: string): void;
 }
 
-export function Card({ img_url, title, description, price }: Props) {
+export function Card({ id, img_url, title, description, price, onDelete }: Props) {
   const [isAvailable, setIsAvailable] = useState(true);
 
   function handleChangeAvailable() {
@@ -97,7 +99,7 @@ export function Card({ img_url, title, description, price }: Props) {
             </Box>
           </Button>
 
-          <Button w="24px">
+          <Button w="24px" onClick={() => onDelete(id)}>
             <Box bgColor="white" padding="2.5" borderRadius="8px">
               <RiDeleteBin7Line size="24px" />
             </Box>

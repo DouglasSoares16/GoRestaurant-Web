@@ -47,12 +47,13 @@ export default function Home() {
 
   const handleCreateDish: SubmitHandler<CreateDishFormData> = async (values) => {
     try {
-      await api.post("/dishes", values);
+      const { data } = await api.post("/dishes", values);
+
       setDishes(oldState => [
         ...oldState,
         {
           ...values,
-          id: String(oldState.length + Math.random())
+          id: data.id
         }
       ]);
     } catch(error) {
@@ -71,6 +72,28 @@ export default function Home() {
       setCreatedDish(false);
       onClose();
     }, 1500);
+  }
+
+  async function handleDeleteDish(id: string) {
+    try {
+      await api.delete(`dishes/${id}`);
+
+      const filteredDishes = dishes.filter((dish) => dish.id !== id);
+
+      setDishes(filteredDishes);
+
+      toast({
+        title: "Prato Deletado!",
+        status: "info",
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error: Não foi possível deletar",
+        status: "error",
+        isClosable: true,
+      });
+    }
   }
 
   useEffect(() => {
@@ -93,10 +116,12 @@ export default function Home() {
             dishes.map(dish => (
               <Card
                 key={dish.id}
+                id={dish.id}
                 img_url={dish.img_url}
                 title={dish.title}
                 description={dish.description}
                 price={dish.price}
+                onDelete={handleDeleteDish}
               />
             ))
           }
